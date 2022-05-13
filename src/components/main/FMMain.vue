@@ -1,11 +1,17 @@
 <template>
   <div id="fm-main">
     <FMNav />
+    <div id="fm-main-container">
+      <FMSidebar />
+      <FMContent />
+    </div>
   </div>
 </template>
 
 <script setup>
 import FMNav from "./nav/FMNav.vue";
+import FMSidebar from "./sidebar/FMSidebar.vue";
+import FMContent from "./content/FMContent.vue";
 </script>
 
 <style>
@@ -15,6 +21,6 @@ import FMNav from "./nav/FMNav.vue";
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: pink;
+  background-color: #f2f1e9;
 }
 </style>

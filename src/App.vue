@@ -1,6 +1,6 @@
 <template>
-  <!-- <FMLogin /> -->
-  <FMMain />
+  <FMLogin />
+  <!-- <FMMain /> -->
 </template>
 
 <script setup>

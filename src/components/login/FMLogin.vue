@@ -48,20 +48,23 @@ import { reactive } from "vue";
 import axios from "axios";
 
 // URL
-// const loginURL = "http://127.0.0.1:4523/mock/970087/login.do";
-const loginURL = "http://localhost:5000/login.do";
+const loginURL = "http://127.0.0.1:8080/login.do";
 
 const userInfo = reactive({
   username: null,
   password: null,
-  passwordFree: null,
+  passwordFree: false,
 });
 
 function userLogin() {
   axios({
     method: "post",
     url: loginURL,
-    params: { userAct: userInfo.username, userPwd: userInfo.password },
+    params: {
+      loginAct: userInfo.username,
+      loginPwd: userInfo.password,
+      isRemPwd: userInfo.passwordFree,
+    },
   }).then((res) => {
     console.log(res.data);
     if (res.data.code === "1") {
