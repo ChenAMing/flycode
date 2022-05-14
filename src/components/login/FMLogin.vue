@@ -4,6 +4,7 @@
       <div id="fm-login-frame">
         <div id="fm-login-logo">飞码记账</div>
         <div id="fm-login-main">
+          <!-- 账号 -->
           <div class="fm-login-input">
             <label for="fm-login-username">账号</label>
             <input
@@ -13,6 +14,8 @@
               placeholder="请输入账号"
             />
           </div>
+
+          <!-- 密码 -->
           <div class="fm-login-input">
             <label for="fm-login-password">密码</label>
             <input
@@ -22,6 +25,8 @@
               placeholder="请输入密码"
             />
           </div>
+
+          <!-- 七天内免登录功能 -->
           <div id="fm-login-checkbox-container">
             <input
               type="checkbox"
@@ -30,7 +35,11 @@
             />
             <label for="fm-login-checkbox">七天内免登录</label>
           </div>
+
+          <!-- 登录 -->
           <button @click="userLogin" id="fm-login-btn">登录</button>
+
+          <!-- 注册 -->
           <div id="fm-login-footer">
             <div>
               <span>还没有账号？</span>
@@ -40,15 +49,22 @@
         </div>
       </div>
     </div>
+    <!-- 路由视图 -->
+    <router-view></router-view>
   </div>
 </template>
 
 <script setup>
-import { reactive } from "vue";
 import axios from "axios";
+import { reactive } from "vue";
+import { useRouter } from "vue-router";
+import { useStatus } from "../../stores/store";
 
 // URL
 const loginURL = "http://127.0.0.1:8080/login.do";
+const router = useRouter();
+
+const status = useStatus();
 
 const userInfo = reactive({
   username: null,
@@ -56,27 +72,46 @@ const userInfo = reactive({
   passwordFree: false,
 });
 
+// TODO: 调试使用
 function userLogin() {
-  axios({
-    method: "post",
-    url: loginURL,
+  router.replace({
+    name: "home",
     params: {
-      loginAct: userInfo.username,
-      loginPwd: userInfo.password,
-      isRemPwd: userInfo.passwordFree,
+      id: userInfo.username,
     },
-  }).then((res) => {
-    console.log(res.data);
-    if (res.data.code === "1") {
-      // TODO: 跳转页面
-      console.log();
-    } else if (res.data.code === "0") {
-      alert("账号或密码错误！请重新输入。");
-    }
   });
+  // TODO: 后端返回用户名
+  status.displayUsername = userInfo.username;
 }
 
-function atOnceRegister() {}
+// function userLogin() {
+//   axios({
+//     method: "post",
+//     url: loginURL,
+//     params: {
+//       loginAct: userInfo.username,
+//       loginPwd: userInfo.password,
+//       isRemPwd: userInfo.passwordFree,
+//     },
+//   }).then((res) => {
+//     if (res.data.code === "1") {
+//       // TODO: 路由应使用什么作为参数？用户名或用户ID(更加考虑)?
+//       // TODO: 路由模式需要更改，使用 params 传参无法使用刷新功能
+//       router.replace({
+//         name: "home",
+//         params: {
+//           id: userInfo.username,
+//         },
+//       });
+//     } else if (res.data.code === "0") {
+//       alert("账号或密码错误！请重新输入。");
+//     }
+//   });
+// }
+
+function atOnceRegister() {
+  router.push("/register");
+}
 </script>
  
 <style>
@@ -211,6 +246,7 @@ function atOnceRegister() {}
 #fm-login-ir {
   color: #000000 !important;
   transition: color 0.5s;
+  cursor: pointer;
 }
 
 #fm-login-ir:hover {
