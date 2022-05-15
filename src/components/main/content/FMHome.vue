@@ -3,12 +3,9 @@
     <div id="fm-home-header">
       <div id="fm-home-overview">
         <h1>概况</h1>
-        <div>
-          您好，{{ status.displayUsername }}，今天是您记账的第
-          {{ overview.day }} 天，此账本共记录了 {{ overview.records }} 笔流水。
-        </div>
-        <div>本月支出</div>
-        <div>本月收入</div>
+        <div>{{ overview.display }}</div>
+        <!-- <div>本月支出</div>
+        <div>本月收入</div> -->
       </div>
       <div id="fm-home-report">
         <h1>简报</h1>
@@ -28,14 +25,25 @@
 import { reactive } from "vue";
 import { useStatus } from "../../../stores/store";
 import FMHomeTable from "./FMHomeTable.vue";
+import axios from "axios";
 
 const status = useStatus();
 
-// TODO: 更改为从后端获取
 const overview = reactive({
-  day: "12",
-  records: "500",
+  display: "",
 });
+
+function getOverview() {
+  axios.get("http://127.0.0.1:8080/generateBillBrief.do").then((res) => {
+    if (res.data.code === "1") {
+      overview.display = res.data.message;
+    } else if (res.data.code === "0") {
+      alert("系统忙，请稍后重试！");
+    }
+  });
+}
+
+getOverview()
 </script>
 
 <style scoped>

@@ -60,8 +60,6 @@ import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useStatus } from "../../stores/store";
 
-// URL
-const loginURL = "http://127.0.0.1:8080/login.do";
 const router = useRouter();
 
 const status = useStatus();
@@ -72,42 +70,42 @@ const userInfo = reactive({
   passwordFree: false,
 });
 
-// TODO: 调试使用
-function userLogin() {
-  router.replace({
-    name: "home",
-    params: {
-      id: userInfo.username,
-    },
-  });
-  // TODO: 后端返回用户名
-  status.displayUsername = userInfo.username;
-}
-
+// // TODO: 调试使用
 // function userLogin() {
-//   axios({
-//     method: "post",
-//     url: loginURL,
+//   router.replace({
+//     name: "home",
 //     params: {
-//       loginAct: userInfo.username,
-//       loginPwd: userInfo.password,
-//       isRemPwd: userInfo.passwordFree,
+//       id: userInfo.username,
 //     },
-//   }).then((res) => {
-//     if (res.data.code === "1") {
-//       // TODO: 路由应使用什么作为参数？用户名或用户ID(更加考虑)?
-//       // TODO: 路由模式需要更改，使用 params 传参无法使用刷新功能
-//       router.replace({
-//         name: "home",
-//         params: {
-//           id: userInfo.username,
-//         },
-//       });
-//     } else if (res.data.code === "0") {
-//       alert("账号或密码错误！请重新输入。");
-//     }
 //   });
+//   // TODO: 后端返回用户名
+//   status.displayUsername = userInfo.username;
 // }
+
+function userLogin() {
+  axios({
+    method: "post",
+    url: "http://127.0.0.1:8080/login.do",
+    params: {
+      loginAct: userInfo.username,
+      loginPwd: userInfo.password,
+      isRemPwd: userInfo.passwordFree,
+    },
+  }).then((res) => {
+    if (res.data.code === "1") {
+      // TODO: 路由模式需要更改，使用 params 传参无法使用刷新功能
+      router.replace({
+        name: "home",
+        params: {
+          id: res.data.message,
+        },
+      });
+      status.displayUsername = res.data.message;
+    } else if (res.data.code === "0") {
+      alert("账号或密码错误！请重新输入。");
+    }
+  });
+}
 
 function atOnceRegister() {
   router.push("/register");

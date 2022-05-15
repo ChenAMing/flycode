@@ -1,7 +1,7 @@
 <template>
   <div id="fm-sidebar">
     <div id="fm-sidebar-user">
-      <img src="" alt="" />
+      <!-- <img src="../../../assets/img-sidebar/via.jpg" alt="" /> -->
       <!-- TODO:username -->
       <div id="fm-sidebar-username">{{ sidebar.username }}</div>
     </div>

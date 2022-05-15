@@ -8,7 +8,6 @@ export const useStatus = defineStore({
     // 登录的用户名：
     displayUsername: null,
   }),
-  actions: () => ({}),
 });
 
 export const useDisplayMenu = defineStore({

@@ -7,10 +7,11 @@
         </tr>
       </thead>
       <tbody>
-        <!-- TODO: 后端确定属性名 -->
-        <tr v-for="(data, propName) in tableData" :key="propName">
-          <td>{{ data.name }}</td>
+        <tr v-for="(data, index) in tableData.billData" :key="index">
+          <td>{{ data.title }}</td>
           <td>{{ data.type }}</td>
+          <td>{{ data.billTime }}</td>
+          <td>{{ data.sort }}</td>
           <td>{{ data.price }}</td>
         </tr>
       </tbody>
@@ -20,24 +21,29 @@
 
 <script setup>
 import { reactive } from "vue";
+import axios from "axios";
 
-const tableHeader = ["名称", "分类", "金额"];
+const tableHeader = ["名称", "类型", "日期", "分类", "金额"];
 
-// const tableData = reactive({
-//   name: "",
-//   incomeOrExpend: true,
-//   type: "",
-//   price: "",
-// });
+const tableData = reactive({
+  billData: [],
+});
 
-const tableData = {
-  id: {
-    name: "打车去玩儿",
-    incomeOrExpend: true,
-    type: "交通",
-    price: "100",
-  },
-};
+function getHomeData() {
+  axios.get("http://127.0.0.1:8080/showTopFiveBills.do").then((res) => {
+    for (let i = 0; i < res.data.billList.length; i++) {
+      tableData.billData.push({
+        title: res.data.billList[i].title,
+        type: res.data.billList[i].type,
+        billTime: res.data.billList[i].billTime,
+        sort: res.data.billList[i].sort,
+        price: res.data.billList[i].price,
+      });
+    }
+  });
+}
+
+getHomeData();
 </script>
 
 <style scoped>
