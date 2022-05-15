@@ -1,16 +1,21 @@
 <template>
   <div id="fm-sidebar">
     <div id="fm-sidebar-user">
-      <!-- <img src="../../../assets/img-sidebar/via.jpg" alt="" /> -->
+      <div id="fm-sidebar-via">
+        <a-avatar :size="80">
+          <img alt="avatar" src="../../../assets/img-sidebar/via.jpg" />
+        </a-avatar>
+      </div>
       <!-- TODO:username -->
+
       <div id="fm-sidebar-username">{{ sidebar.username }}</div>
     </div>
     <div id="fm-sidebar-menu">
       <a-space direction="vertical" size="large">
-        <FMSidebarHome :style="btnStyle"/>
-        <FMSidebarRecord :style="btnStyle"/>
-        <FMSidebarReport :style="btnStyle"/>
-        <FMSidebarPerson :style="btnStyle"/>
+        <FMSidebarHome :style="btnStyle" />
+        <FMSidebarRecord :style="btnStyle" />
+        <FMSidebarReport :style="btnStyle" />
+        <FMSidebarPerson :style="btnStyle" />
       </a-space>
     </div>
   </div>
@@ -56,5 +61,13 @@ const btnStyle = {
 
 #fm-sidebar-menu {
   margin: auto;
+}
+
+#fm-sidebar-user {
+  margin: 0 auto;
+}
+
+#fm-sidebar-via {
+  transform: translateY(-30px);
 }
 </style>

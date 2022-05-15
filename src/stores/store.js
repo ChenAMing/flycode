@@ -7,6 +7,7 @@ export const useStatus = defineStore({
     isAddMenuOpen: false,
     // 登录的用户名：
     displayUsername: null,
+    displayUserID: null,
   }),
 });
 
@@ -20,5 +21,12 @@ export const useDisplayMenu = defineStore({
     | | 4.个人中心
     \*/
     displayMenu: 1,
+  }),
+});
+
+export const useAxiosConfig = defineStore({
+  id: "axiosConfig",
+  state: () => ({
+    baseURL: "http://127.0.0.1:8080",
   }),
 });

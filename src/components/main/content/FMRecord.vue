@@ -78,6 +78,7 @@ function getData() {
       type: data.type === "收入" ? "2" : "1",
     },
   }).then((res) => {
+    data.display = []
     for (let i = 0; i < res.data.billList.length; i++) {
       data.display.push({
         key: i + 1,

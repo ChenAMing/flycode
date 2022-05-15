@@ -97,10 +97,11 @@ function userLogin() {
       router.replace({
         name: "home",
         params: {
-          id: res.data.message,
+          id: res.data.returnData.id,
         },
       });
-      status.displayUsername = res.data.message;
+      status.displayUsername = res.data.returnData.name;
+      status.displayUserID = res.data.returnData.id;
     } else if (res.data.code === "0") {
       alert("账号或密码错误！请重新输入。");
     }

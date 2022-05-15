@@ -25,7 +25,7 @@ import { useStatus } from "../../stores/store.js";
 const status = useStatus();
 </script>
 
-<style>
+<style scoped>
 #fm-main {
   position: absolute;
   top: 0;
