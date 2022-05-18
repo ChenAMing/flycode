@@ -4,25 +4,13 @@
       <div id="fm-add">
         <div class="fm-add-row">
           <span class="fm-add-label">账单类型</span>
-          <!-- <a-radio-group v-model:model-value="addForm.type">
-            <a-radio value="2">收入</a-radio>
-            <a-radio value="1">支出</a-radio>
-          </a-radio-group> -->
-          <!-- <a-cascader
-            :options="options"
-            default-value="income"
-            expand-trigger="hover"
-            placeholder="选择类型"
-            v-model:model-value="addForm.type"
-          ></a-cascader> -->
-          <a-select v-model="addForm.type">
+
+          <a-select v-model="type">
             <a-option>收入</a-option>
             <a-option>支出</a-option>
           </a-select>
-          <a-select
-            :options="addForm.data[addForm.type]"
-            v-model="addForm.sort"
-          >
+
+          <a-select :options="data[type] || []" v-model="addForm.sort">
           </a-select>
         </div>
 
@@ -51,7 +39,7 @@
           <a-textarea auto-size v-model:model-value="addForm.memo" />
         </div>
 
-        <div :style="{ display: 'flex', flexFlow: 'row nowrap' }">
+        <div class="flex-row">
           <div :style="{ flexGrow: '1' }"></div>
           <a-space size="large">
             <a-button type="primary" @click="submitAdd">提交</a-button>
@@ -66,45 +54,47 @@
 
 <script setup>
 // 作为 FMMain 子组件
-import { reactive, watch } from "vue";
-import { useStatus } from "../../../stores/store.js";
 import axios from "axios";
+import { reactive, watch, ref } from "vue";
+import { useStatus, useAxiosConfig } from "../../../stores/store.js";
 
 const status = useStatus();
+const axiosConfig = useAxiosConfig();
+
+const data = ref({
+  收入: [],
+  支出: [],
+});
+
+const type= ref('收入')
 
 const addForm = reactive({
-  type: "收入",
+  // type: "收入",
   name: null,
   date: null,
   price: null,
   memo: null,
   sort: null,
-  data: {
-    收入: [],
-    支出: [],
-  },
 });
 
 function closeAddMenu() {
   status.isAddMenuOpen = false;
 }
 
-// TODO: 需要优化代码冗余
 function submitAdd() {
   axios({
     method: "post",
-    url: "http://127.0.0.1:8080/saveCreateBill.do",
+    url: `${axiosConfig.baseURL}/saveCreateBill.do`,
     params: {
       title: addForm.name,
       billTime: addForm.date,
-      type: addForm.type === "收入" ? "2" : "1",
+      type: type.value === "收入" ? "2" : "1",
       remark: addForm.memo,
       price: addForm.price,
       sort: addForm.sort,
     },
   }).then((res) => {
     if (res.data.code === "1") {
-      // TODO: 改成更好的方式
       alert("增加成功！");
       status.isAddMenuOpen = false;
     } else if (res.data.code === "0") {
@@ -114,23 +104,29 @@ function submitAdd() {
 }
 
 function resetAdd() {
-  addForm.type = "收入";
+  type.value = "收入";
   addForm.name = null;
   addForm.date = null;
   addForm.price = null;
   addForm.memo = null;
+  addForm.sort = null;
 }
 
+watch(type, () => {
+  addForm.sort = "";
+});
+
 function getSort() {
-  axios.get("http://localhost:8080/showBillSort.do").then((res) => {
+  axios.get(`${axiosConfig.baseURL}/showBillSort.do`).then((res) => {
     for (let i = 0; i < res.data.incomingList.length; i++) {
-      addForm.data["收入"].push({
+      data.value["收入"].push({
         value: res.data.incomingList[i]["id"],
         label: res.data.incomingList[i]["value"],
       });
     }
+
     for (let i = 0; i < res.data.expendList.length; i++) {
-      addForm.data["支出"].push({
+      data.value["支出"].push({
         value: res.data.expendList[i]["id"],
         label: res.data.expendList[i]["value"],
       });
@@ -141,7 +137,7 @@ function getSort() {
 getSort();
 </script>
 
-<style>
+<style scoped>
 #fm-add-container {
   position: fixed;
   top: 0;

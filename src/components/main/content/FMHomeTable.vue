@@ -1,5 +1,5 @@
 <template>
-  <div id="fm-home-table">
+  <div class="flex-column">
     <table>
       <thead>
         <tr>
@@ -20,8 +20,11 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
 import axios from "axios";
+import { reactive } from "vue";
+import { useAxiosConfig } from "../../../stores/store";
+
+const axiosConfig = useAxiosConfig();
 
 const tableHeader = ["名称", "类型", "日期", "分类", "金额"];
 
@@ -30,7 +33,7 @@ const tableData = reactive({
 });
 
 function getHomeData() {
-  axios.get("http://127.0.0.1:8080/showTopFiveBills.do").then((res) => {
+  axios.get(`${axiosConfig.baseURL}/showTopFiveBills.do`).then((res) => {
     for (let i = 0; i < res.data.billList.length; i++) {
       tableData.billData.push({
         title: res.data.billList[i].title,
@@ -47,11 +50,6 @@ getHomeData();
 </script>
 
 <style scoped>
-#fm-home-table {
-  display: flex;
-  flex-flow: column nowrap;
-}
-
 table {
   border-collapse: collapse;
   border: 1px #f2f3f5;

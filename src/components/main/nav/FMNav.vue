@@ -12,11 +12,12 @@
 
       <a-space>
         <!-- 搜索框 -->
-        <a-input-search
+        <!-- <a-input-search
           :style="{ width: '320px' }"
           placeholder="搜索一条记录"
           search-button
-        />
+        /> -->
+
         <!-- 增加记录 -->
         <a-button type="primary" @click="openAddMenu">
           <template #icon>
@@ -24,6 +25,7 @@
           </template>
           <template #default>增加记录</template>
         </a-button>
+
         <!-- 安全退出 -->
         <FMExit />
       </a-space>

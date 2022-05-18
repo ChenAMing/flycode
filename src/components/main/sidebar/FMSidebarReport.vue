@@ -1,8 +1,5 @@
 <template>
   <a-button type="text" long="true" size="large" @click="arriveReport">
-    <!-- <template #icon>
-            <icon-bar-chart />
-          </template> -->
     <template #default>统计报表</template>
   </a-button>
 </template>

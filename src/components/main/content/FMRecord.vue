@@ -1,5 +1,5 @@
 <template>
-  <div id="fm-record">
+  <div class="flex-column">
     <div id="fm-record-form-container">
       <div id="fm-record-form">
         <a-range-picker
@@ -30,9 +30,11 @@
 </template>
 
 <script setup>
-import { IconSearch } from "@arco-design/web-vue/es/icon";
-import { reactive } from "vue";
 import axios from "axios";
+import { reactive } from "vue";
+import { useAxiosConfig } from "../../../stores/store";
+
+const axiosConfig = useAxiosConfig();
 
 const data = reactive({
   date: null,
@@ -71,14 +73,14 @@ const columns = [
 function getData() {
   axios({
     method: "get",
-    url: "http://127.0.0.1:8080/queryBillByConditionForPage.do",
+    url: `${axiosConfig.baseURL}/queryBillByConditionForPage.do`,
     params: {
       startDate: data.date[0],
       endDate: data.date[1],
       type: data.type === "收入" ? "2" : "1",
     },
   }).then((res) => {
-    data.display = []
+    data.display = [];
     for (let i = 0; i < res.data.billList.length; i++) {
       data.display.push({
         key: i + 1,
@@ -94,11 +96,6 @@ function getData() {
 </script>
 
 <style scoped>
-#fm-record {
-  display: flex;
-  flex-flow: column nowrap;
-}
-
 #fm-record-form {
   display: flex;
   flex-flow: row nowrap;

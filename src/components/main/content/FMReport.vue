@@ -1,8 +1,8 @@
 <template>
-  <div id="fm-report-container">
+  <div class="flex-column">
     <a-typography-title heading="2">消费/收入趋势图</a-typography-title>
 
-    <div>
+    <div class="flex-row">
       <a-range-picker
         @change="onChange"
         @select="onSelect"
@@ -24,79 +24,62 @@
     </div>
 
     <vue-echarts
-      :option="option"
+      :option="data.options"
       ref="chart"
       :style="{ height: '400px', maxWidth: '691px', minWidth: '400px' }"
+      v-if="data.chartVisible"
     ></vue-echarts>
   </div>
 </template>
 
 <script setup>
-import { VueEcharts } from "vue3-echarts";
 import axios from "axios";
-import { reactive, toRefs } from "vue";
+import { reactive } from "vue";
+import { VueEcharts } from "vue3-echarts";
+import { useAxiosConfig } from "../../../stores/store";
+
+const axiosConfig = useAxiosConfig();
 
 const data = reactive({
   date: null,
   type: "收入",
-  xData: [],
-  yData: [],
-});
-
-const chart = toRefs({
-  xAxis: {
-    type: "category",
-    data: data.xData,
-  },
-  yAxis: {
-    type: "value",
-  },
-  series: [
-    {
-      data: data.yData,
-      type: "bar",
-      showBackground: true,
-      backgroundStyle: {
-        color: "rgba(220, 220, 220, 0.8)",
-      },
-    },
-  ],
+  chartVisible: false,
+  options: null,
 });
 
 function createReport() {
   axios({
     method: "post",
-    url: "http://127.0.0.1:8080/showBillCharts.do",
+    url: `${axiosConfig.baseURL}/showBillCharts.do`,
     params: {
       startDate: data.date[0],
       endDate: data.date[1],
       type: data.type === "收入" ? "2" : "1",
     },
   }).then((res) => {
-    xData = res.data.returnData.dataList;
-    yData = res.data.returnData.priceList;
+    // 图表配置
+    data.options = {
+      xAxis: {
+        type: "category",
+        data: res.data.returnData.dateList,
+      },
+      yAxis: {
+        type: "value",
+      },
+      series: [
+        {
+          data: res.data.returnData.priceList,
+          type: "bar",
+          showBackground: true,
+          backgroundStyle: {
+            color: "rgba(220, 220, 220, 0.8)",
+          },
+        },
+      ],
+    };
 
-    // let set = new Set();
-    // for (let i = 0; i < res.data.returnData.length; i++) {
-    //   set.add(res.data.returnData.billTime);
-    // }
-    // for (let item of set) {
-    //   data.xData.push(item);
-    //   let y = 0;
-    //   for (let i = 0; i < res.data.returnData.length; i++) {
-    //     if (res.data.returnData.billTime === item) {
-    //       y += parseFloat(res.data.returnData.price);
-    //     }
-    //   }
-    //   data.yData.push(y);
-    // }
+    // 显示组件
+    data.chartVisible = true;
   });
 }
 </script>
-
-<style>
-#fm-report-container {
-  display: flex;
-  flex-flow: column nowrap;
-}
-</style>

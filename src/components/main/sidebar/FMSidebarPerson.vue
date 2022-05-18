@@ -1,8 +1,5 @@
 <template>
   <a-button type="text" long="true" size="large" @click="arrivePerson">
-    <!-- <template #icon>
-            <icon-user />
-          </template> -->
     <template #default>个人中心</template>
   </a-button>
 </template>

@@ -1,8 +1,5 @@
 <template>
   <a-button type="text" long="true" size="large" @click="arriveHome">
-    <!-- <template #icon>
-            <icon-home />
-          </template> -->
     <template #default>主页</template>
   </a-button>
 </template>

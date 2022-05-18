@@ -1,8 +1,9 @@
 <template>
-  <div id="fm-login">
+  <div class="flex-column" id="fm-login">
     <div id="fm-login-container">
       <div id="fm-login-frame">
         <div id="fm-login-logo">飞码记账</div>
+        
         <div id="fm-login-main">
           <!-- 账号 -->
           <div class="fm-login-input">
@@ -27,7 +28,7 @@
           </div>
 
           <!-- 七天内免登录功能 -->
-          <div id="fm-login-checkbox-container">
+          <div class="flex-row" id="fm-login-checkbox-container">
             <input
               type="checkbox"
               id="fm-login-checkbox"
@@ -38,18 +39,10 @@
 
           <!-- 登录 -->
           <button @click="userLogin" id="fm-login-btn">登录</button>
-
-          <!-- 注册 -->
-          <div id="fm-login-footer">
-            <div>
-              <span>还没有账号？</span>
-              <span id="fm-login-ir" @click="atOnceRegister">立即注册</span>
-            </div>
-          </div>
         </div>
       </div>
     </div>
-    <!-- 路由视图 -->
+
     <router-view></router-view>
   </div>
 </template>
@@ -58,11 +51,12 @@
 import axios from "axios";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
-import { useStatus } from "../../stores/store";
+import { useStatus, useAxiosConfig } from "../../stores/store";
 
 const router = useRouter();
 
 const status = useStatus();
+const axiosConfig = useAxiosConfig();
 
 const userInfo = reactive({
   username: null,
@@ -70,22 +64,10 @@ const userInfo = reactive({
   passwordFree: false,
 });
 
-// // TODO: 调试使用
-// function userLogin() {
-//   router.replace({
-//     name: "home",
-//     params: {
-//       id: userInfo.username,
-//     },
-//   });
-//   // TODO: 后端返回用户名
-//   status.displayUsername = userInfo.username;
-// }
-
 function userLogin() {
   axios({
     method: "post",
-    url: "http://127.0.0.1:8080/login.do",
+    url: `${axiosConfig.baseURL}/login.do`,
     params: {
       loginAct: userInfo.username,
       loginPwd: userInfo.password,
@@ -93,7 +75,6 @@ function userLogin() {
     },
   }).then((res) => {
     if (res.data.code === "1") {
-      // TODO: 路由模式需要更改，使用 params 传参无法使用刷新功能
       router.replace({
         name: "home",
         params: {
@@ -106,10 +87,6 @@ function userLogin() {
       alert("账号或密码错误！请重新输入。");
     }
   });
-}
-
-function atOnceRegister() {
-  router.push("/register");
 }
 </script>
  
@@ -125,11 +102,6 @@ function atOnceRegister() {
   background-position: center;
   height: 100%;
   width: 100%;
-}
-
-#fm-login {
-  display: flex;
-  flex-flow: column nowrap;
 }
 
 #fm-login-container {
@@ -191,11 +163,6 @@ function atOnceRegister() {
   font-size: 16px;
 }
 
-#fm-login-checkbox-container {
-  display: flex;
-  flex-flow: row nowrap;
-}
-
 #fm-login-checkbox-container > label {
   font-size: 12px;
   flex-grow: 1;
@@ -226,12 +193,6 @@ function atOnceRegister() {
 
 #fm-login-btn:active {
   background-color: #00978d;
-}
-
-/* 还没有账号？立即注册 */
-#fm-login-footer {
-  display: flex;
-  flex-flow: column nowrap;
 }
 
 #fm-login-footer > div {

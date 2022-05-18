@@ -24,7 +24,7 @@
       <a-space size="large">
         <a-statistic
           title="初始资产"
-          :value="money.inital"
+          :value="money.initial"
           :precision="2"
           show-group-separator
           animation="true"
@@ -46,15 +46,16 @@
 </template>
 
 <script setup>
-import { IconEdit } from "@arco-design/web-vue/es/icon";
-import { reactive } from "vue";
-import { useStatus } from "../../../stores/store";
 import axios from "axios";
+import { reactive } from "vue";
+import { IconEdit } from "@arco-design/web-vue/es/icon";
+import { useStatus, useAxiosConfig } from "../../../stores/store";
 
 const status = useStatus();
+const axiosConfig = useAxiosConfig();
 
 const money = reactive({
-  inital: 0,
+  initial: 0,
   existing: 0,
 });
 
@@ -66,14 +67,14 @@ const user = reactive({
 function getUserInfo() {
   axios({
     method: "get",
-    url: "http://127.0.0.1:8080/queryUserInformation.do",
+    url: `${axiosConfig.baseURL}/queryUserInformation.do`,
     params: {
       id: status.displayUserID,
     },
   }).then((res) => {
     user.sex = res.data.returnData.sex;
     user.intro = res.data.returnData.introduction;
-    money.inital = parseFloat(res.data.returnData.balance);
+    money.initial = parseFloat(res.data.returnData.balance);
     money.existing = parseFloat(res.data.message);
   });
 }

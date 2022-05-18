@@ -6,10 +6,10 @@
           <img alt="avatar" src="../../../assets/img-sidebar/via.jpg" />
         </a-avatar>
       </div>
-      <!-- TODO:username -->
 
       <div id="fm-sidebar-username">{{ sidebar.username }}</div>
     </div>
+
     <div id="fm-sidebar-menu">
       <a-space direction="vertical" size="large">
         <FMSidebarHome :style="btnStyle" />
@@ -39,9 +39,11 @@ const btnStyle = {
   color: "black",
   fontSize: "20px",
 };
+
+const btnContent = ["主页", "查询记录", "统计报表", "个人中心"];
 </script>
 
-<style>
+<style scoped>
 #fm-sidebar {
   margin-top: 70px;
   margin-right: 25px;

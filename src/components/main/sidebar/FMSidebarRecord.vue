@@ -1,8 +1,5 @@
 <template>
   <a-button type="text" long="true" size="large" @click="arriveRecord">
-    <!-- <template #icon>
-      <icon-list />
-    </template> -->
     <template #default>查询记录</template>
   </a-button>
 </template>

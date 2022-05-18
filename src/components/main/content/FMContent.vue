@@ -8,18 +8,13 @@
 </template>
 
 <script setup>
-import { useDisplayMenu } from "../../../stores/store";
-// import { watch } from "vue";
 import FMHome from "./FMHome.vue";
 import FMRecord from "./FMRecord.vue";
 import FMReport from "./FMReport.vue";
 import FMPerson from "./FMPerson.vue";
+import { useDisplayMenu } from "../../../stores/store";
 
 const displayMenu = useDisplayMenu();
-
-// watch(displayMenu, function () {
-//   displayMenu.displayMenu;
-// });
 </script>
 
 <style scoped>
